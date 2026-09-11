@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import html2canvas from 'html2canvas'
 import './App.css'
 
 function App() {
@@ -63,6 +64,7 @@ function App() {
     if (!dragging) return
 
     const imageArea = event.currentTarget.querySelector('.meme-image')
+
     if (!imageArea) return
 
     const rect = imageArea.getBoundingClientRect()
@@ -107,12 +109,29 @@ function App() {
     )
   }
 
+  const downloadMeme = async () => {
+    const memeElement = document.querySelector('.meme-image')
+
+    if (!memeElement) {
+      alert('Please upload an image first')
+      return
+    }
+
+    const canvas = await html2canvas(memeElement)
+
+    const link = document.createElement('a')
+    link.download = 'my-meme.png'
+    link.href = canvas.toDataURL('image/png')
+    link.click()
+  }
+
   return (
     <div className="app">
       <h1>Meme Generator</h1>
 
       <label className="upload-button">
         📁 Upload Image
+
         <input
           type="file"
           accept="image/*"
@@ -126,7 +145,9 @@ function App() {
           type="text"
           placeholder="Enter meme text"
           value={textInput}
-          onChange={(event) => setTextInput(event.target.value)}
+          onChange={(event) =>
+            setTextInput(event.target.value)
+          }
         />
 
         <button onClick={addText}>
@@ -134,15 +155,19 @@ function App() {
         </button>
       </div>
 
-      {/* Text Style Controls */}
       <div className="style-controls">
         <label>
           Size:
+
           <input
             type="number"
             min="12"
             max="100"
-            value={texts.length > 0 ? texts[texts.length - 1].fontSize : 32}
+            value={
+              texts.length > 0
+                ? texts[texts.length - 1].fontSize
+                : 32
+            }
             onChange={(event) =>
               updateLastText({
                 fontSize: Number(event.target.value),
@@ -153,6 +178,7 @@ function App() {
 
         <label>
           Color:
+
           <input
             type="color"
             value={
@@ -171,9 +197,10 @@ function App() {
         <button
           onClick={() =>
             updateLastText({
-              bold: texts.length > 0
-                ? !texts[texts.length - 1].bold
-                : true,
+              bold:
+                texts.length > 0
+                  ? !texts[texts.length - 1].bold
+                  : true,
             })
           }
         >
@@ -183,9 +210,10 @@ function App() {
         <button
           onClick={() =>
             updateLastText({
-              outline: texts.length > 0
-                ? !texts[texts.length - 1].outline
-                : true,
+              outline:
+                texts.length > 0
+                  ? !texts[texts.length - 1].outline
+                  : true,
             })
           }
         >
@@ -193,15 +221,39 @@ function App() {
         </button>
       </div>
 
+      <button
+        className="download-button"
+        onClick={downloadMeme}
+      >
+        📥 Download Meme
+      </button>
+
       <div className="sticker-controls">
         <span>Add Sticker:</span>
 
-        <button onClick={() => addSticker('😀')}>😀</button>
-        <button onClick={() => addSticker('😂')}>😂</button>
-        <button onClick={() => addSticker('😎')}>😎</button>
-        <button onClick={() => addSticker('🔥')}>🔥</button>
-        <button onClick={() => addSticker('❤️')}>❤️</button>
-        <button onClick={() => addSticker('👍')}>👍</button>
+        <button onClick={() => addSticker('😀')}>
+          😀
+        </button>
+
+        <button onClick={() => addSticker('😂')}>
+          😂
+        </button>
+
+        <button onClick={() => addSticker('😎')}>
+          😎
+        </button>
+
+        <button onClick={() => addSticker('🔥')}>
+          🔥
+        </button>
+
+        <button onClick={() => addSticker('❤️')}>
+          ❤️
+        </button>
+
+        <button onClick={() => addSticker('👍')}>
+          👍
+        </button>
       </div>
 
       <div
@@ -212,7 +264,10 @@ function App() {
       >
         {image ? (
           <div className="meme-image">
-            <img src={image} alt="Uploaded meme" />
+            <img
+              src={image}
+              alt="Uploaded meme"
+            />
 
             {texts.map((item) => (
               <div
@@ -223,7 +278,9 @@ function App() {
                   top: `${item.y}px`,
                   fontSize: `${item.fontSize}px`,
                   color: item.color,
-                  fontWeight: item.bold ? 'bold' : 'normal',
+                  fontWeight: item.bold
+                    ? 'bold'
+                    : 'normal',
                   textShadow: item.outline
                     ? `
                       2px 2px 0 black,
@@ -234,7 +291,11 @@ function App() {
                     : 'none',
                 }}
                 onMouseDown={(event) =>
-                  startDragging(event, 'text', item.id)
+                  startDragging(
+                    event,
+                    'text',
+                    item.id
+                  )
                 }
               >
                 {item.text}
@@ -250,7 +311,11 @@ function App() {
                   top: `${item.y}px`,
                 }}
                 onMouseDown={(event) =>
-                  startDragging(event, 'sticker', item.id)
+                  startDragging(
+                    event,
+                    'sticker',
+                    item.id
+                  )
                 }
               >
                 {item.sticker}
@@ -258,7 +323,9 @@ function App() {
             ))}
           </div>
         ) : (
-          <p>Upload an image to get started</p>
+          <p>
+            Upload an image to get started
+          </p>
         )}
       </div>
     </div>
