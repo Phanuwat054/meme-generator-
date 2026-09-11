@@ -5,7 +5,8 @@ function App() {
   const [image, setImage] = useState(null)
   const [texts, setTexts] = useState([])
   const [textInput, setTextInput] = useState('')
-  const [draggingId, setDraggingId] = useState(null)
+  const [dragging, setDragging] = useState(null)
+  const [stickers, setStickers] = useState([])
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0]
@@ -32,37 +33,60 @@ function App() {
     setTextInput('')
   }
 
-  const handleMouseDown = (event, id) => {
+  const addSticker = (sticker) => {
+    setStickers([
+      ...stickers,
+      {
+        id: Date.now(),
+        sticker,
+        x: 100,
+        y: 100,
+      },
+    ])
+  }
+
+  const startDragging = (event, type, id) => {
     event.preventDefault()
-    setDraggingId(id)
+    event.stopPropagation()
+
+    setDragging({
+      type,
+      id,
+    })
   }
 
   const handleMouseMove = (event) => {
-    if (draggingId === null) return
+    if (!dragging) return
 
-    const canvas = event.currentTarget
-    const rect = canvas.getBoundingClientRect()
+    const imageArea = event.currentTarget.querySelector('.meme-image')
+    const rect = imageArea.getBoundingClientRect()
 
     const x = event.clientX - rect.left
     const y = event.clientY - rect.top
 
-    setTexts((currentTexts) =>
-      currentTexts.map((item) =>
-        item.id === draggingId
-          ? {
-              ...item,
-              x,
-              y,
-            }
-          : item
+    if (dragging.type === 'text') {
+      setTexts((currentTexts) =>
+        currentTexts.map((item) =>
+          item.id === dragging.id
+            ? { ...item, x, y }
+            : item
+        )
       )
-    )
+    }
+
+    if (dragging.type === 'sticker') {
+      setStickers((currentStickers) =>
+        currentStickers.map((item) =>
+          item.id === dragging.id
+            ? { ...item, x, y }
+            : item
+        )
+      )
+    }
   }
 
-  const handleMouseUp = (event, id) => {
-    event.preventDefault()
-    event.stopPropagation()
-    setDraggingId(null)
+  const stopDragging = () => {
+    setDragging(null)
   }
 
   return (
@@ -92,11 +116,22 @@ function App() {
         </button>
       </div>
 
+      <div className="sticker-controls">
+        <span>Add Sticker:</span>
+
+        <button onClick={() => addSticker('😀')}>😀</button>
+        <button onClick={() => addSticker('😂')}>😂</button>
+        <button onClick={() => addSticker('😎')}>😎</button>
+        <button onClick={() => addSticker('🔥')}>🔥</button>
+        <button onClick={() => addSticker('❤️')}>❤️</button>
+        <button onClick={() => addSticker('👍')}>👍</button>
+      </div>
+
       <div
         className="canvas"
         onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
+        onMouseUp={stopDragging}
+        onMouseLeave={stopDragging}
       >
         {image ? (
           <div className="meme-image">
@@ -111,10 +146,26 @@ function App() {
                   top: `${item.y}px`,
                 }}
                 onMouseDown={(event) =>
-                  handleMouseDown(event, item.id)
+                  startDragging(event, 'text', item.id)
                 }
               >
                 {item.text}
+              </div>
+            ))}
+
+            {stickers.map((item) => (
+              <div
+                key={item.id}
+                className="meme-sticker"
+                style={{
+                  left: `${item.x}px`,
+                  top: `${item.y}px`,
+                }}
+                onMouseDown={(event) =>
+                  startDragging(event, 'sticker', item.id)
+                }
+              >
+                {item.sticker}
               </div>
             ))}
           </div>
