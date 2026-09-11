@@ -9,6 +9,7 @@
   margin-bottom: 30px;
 }
 
+/* Upload Button */
 .upload-button {
   display: inline-block;
   padding: 12px 20px;
@@ -23,8 +24,9 @@
   background: #5849c2;
 }
 
+/* Text Controls */
 .text-controls {
-  margin: 20px auto;
+  margin: 20px auto 10px;
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -52,6 +54,52 @@
   background: #0875c1;
 }
 
+/* Text Style Controls */
+.style-controls {
+  margin: 10px auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.style-controls label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+}
+
+.style-controls input[type="number"] {
+  width: 60px;
+  padding: 7px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.style-controls input[type="color"] {
+  width: 45px;
+  height: 35px;
+  padding: 2px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.style-controls button {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.style-controls button:hover {
+  background: #eee;
+}
+
+/* Canvas */
 .canvas {
   width: 600px;
   min-height: 400px;
@@ -65,6 +113,7 @@
   overflow: hidden;
 }
 
+/* Meme Image */
 .meme-image {
   position: relative;
   display: inline-block;
@@ -77,17 +126,7 @@
   display: block;
 }
 
-.meme-text {
-  color: white;
-  font-size: 32px;
-  font-weight: bold;
-  text-shadow:
-    2px 2px 0 black,
-    -2px -2px 0 black,
-    2px -2px 0 black,
-    -2px 2px 0 black;
-  margin: 10px;
-}
+/* Meme Text */
 .meme-text {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -98,6 +137,8 @@
 .meme-text:active {
   cursor: grabbing;
 }
+
+/* Sticker Controls */
 .sticker-controls {
   margin: 15px auto;
   display: flex;
@@ -119,6 +160,7 @@
   background: #eee;
 }
 
+/* Stickers */
 .meme-sticker {
   position: absolute;
   transform: translate(-50%, -50%);

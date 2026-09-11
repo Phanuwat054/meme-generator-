@@ -27,6 +27,10 @@ function App() {
         text: textInput,
         x: 50,
         y: 50,
+        fontSize: 32,
+        color: '#ffffff',
+        bold: true,
+        outline: true,
       },
     ])
 
@@ -59,6 +63,8 @@ function App() {
     if (!dragging) return
 
     const imageArea = event.currentTarget.querySelector('.meme-image')
+    if (!imageArea) return
+
     const rect = imageArea.getBoundingClientRect()
 
     const x = event.clientX - rect.left
@@ -89,6 +95,18 @@ function App() {
     setDragging(null)
   }
 
+  const updateLastText = (changes) => {
+    if (texts.length === 0) return
+
+    setTexts((currentTexts) =>
+      currentTexts.map((item, index) =>
+        index === currentTexts.length - 1
+          ? { ...item, ...changes }
+          : item
+      )
+    )
+  }
+
   return (
     <div className="app">
       <h1>Meme Generator</h1>
@@ -113,6 +131,65 @@ function App() {
 
         <button onClick={addText}>
           ➕ Add Text
+        </button>
+      </div>
+
+      {/* Text Style Controls */}
+      <div className="style-controls">
+        <label>
+          Size:
+          <input
+            type="number"
+            min="12"
+            max="100"
+            value={texts.length > 0 ? texts[texts.length - 1].fontSize : 32}
+            onChange={(event) =>
+              updateLastText({
+                fontSize: Number(event.target.value),
+              })
+            }
+          />
+        </label>
+
+        <label>
+          Color:
+          <input
+            type="color"
+            value={
+              texts.length > 0
+                ? texts[texts.length - 1].color
+                : '#ffffff'
+            }
+            onChange={(event) =>
+              updateLastText({
+                color: event.target.value,
+              })
+            }
+          />
+        </label>
+
+        <button
+          onClick={() =>
+            updateLastText({
+              bold: texts.length > 0
+                ? !texts[texts.length - 1].bold
+                : true,
+            })
+          }
+        >
+          <strong>B</strong>
+        </button>
+
+        <button
+          onClick={() =>
+            updateLastText({
+              outline: texts.length > 0
+                ? !texts[texts.length - 1].outline
+                : true,
+            })
+          }
+        >
+          Outline
         </button>
       </div>
 
@@ -144,6 +221,17 @@ function App() {
                 style={{
                   left: `${item.x}px`,
                   top: `${item.y}px`,
+                  fontSize: `${item.fontSize}px`,
+                  color: item.color,
+                  fontWeight: item.bold ? 'bold' : 'normal',
+                  textShadow: item.outline
+                    ? `
+                      2px 2px 0 black,
+                      -2px -2px 0 black,
+                      2px -2px 0 black,
+                      -2px 2px 0 black
+                    `
+                    : 'none',
                 }}
                 onMouseDown={(event) =>
                   startDragging(event, 'text', item.id)
