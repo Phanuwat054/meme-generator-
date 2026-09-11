@@ -109,3 +109,18 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+.download-button {
+  margin: 15px auto;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #00b894;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.download-button:hover {
+  background: #009f7f;
+}
