@@ -23,6 +23,35 @@
   background: #5849c2;
 }
 
+.text-controls {
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.text-controls input {
+  width: 300px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.text-controls button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #0984e3;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.text-controls button:hover {
+  background: #0875c1;
+}
+
 .canvas {
   width: 600px;
   min-height: 400px;
@@ -36,12 +65,26 @@
   overflow: hidden;
 }
 
-.canvas img {
+.meme-image {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.meme-image img {
   max-width: 100%;
   max-height: 600px;
   display: block;
 }
 
-.canvas p {
-  color: #888;
+.meme-text {
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  text-shadow:
+    2px 2px 0 black,
+    -2px -2px 0 black,
+    2px -2px 0 black,
+    -2px 2px 0 black;
+  margin: 10px;
 }
