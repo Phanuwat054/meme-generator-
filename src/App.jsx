@@ -5,6 +5,7 @@ function App() {
   const [image, setImage] = useState(null)
   const [texts, setTexts] = useState([])
   const [textInput, setTextInput] = useState('')
+  const [draggingId, setDraggingId] = useState(null)
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0]
@@ -23,10 +24,45 @@ function App() {
       {
         id: Date.now(),
         text: textInput,
+        x: 50,
+        y: 50,
       },
     ])
 
     setTextInput('')
+  }
+
+  const handleMouseDown = (event, id) => {
+    event.preventDefault()
+    setDraggingId(id)
+  }
+
+  const handleMouseMove = (event) => {
+    if (draggingId === null) return
+
+    const canvas = event.currentTarget
+    const rect = canvas.getBoundingClientRect()
+
+    const x = event.clientX - rect.left
+    const y = event.clientY - rect.top
+
+    setTexts((currentTexts) =>
+      currentTexts.map((item) =>
+        item.id === draggingId
+          ? {
+              ...item,
+              x,
+              y,
+            }
+          : item
+      )
+    )
+  }
+
+  const handleMouseUp = (event, id) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setDraggingId(null)
   }
 
   return (
@@ -56,7 +92,12 @@ function App() {
         </button>
       </div>
 
-      <div className="canvas">
+      <div
+        className="canvas"
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
         {image ? (
           <div className="meme-image">
             <img src={image} alt="Uploaded meme" />
@@ -65,6 +106,13 @@ function App() {
               <div
                 key={item.id}
                 className="meme-text"
+                style={{
+                  left: `${item.x}px`,
+                  top: `${item.y}px`,
+                }}
+                onMouseDown={(event) =>
+                  handleMouseDown(event, item.id)
+                }
               >
                 {item.text}
               </div>

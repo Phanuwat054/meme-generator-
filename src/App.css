@@ -88,3 +88,13 @@
     -2px 2px 0 black;
   margin: 10px;
 }
+.meme-text {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  user-select: none;
+}
+
+.meme-text:active {
+  cursor: grabbing;
+}
